@@ -34,12 +34,14 @@ class Task
     public $clientID;
     public $performerID;
 
-    public function __construct($clientID, $performerID) {
+    public function __construct($clientID, $performerID)
+    {
         $this->clientID = $clientID;
         $this->performerID = $performerID;
     }
 
-    public function getStatusMap() {
+    public function getStatusMap()
+    {
         return [
             self::STATUS_NEW => 'Новое',
             self::STATUS_CANCEL => 'Отменено',

@@ -1,4 +1,5 @@
 <?php
+namespace HtmlAcademy;
 class Task
 {
     public const STATUS_NEW = 'new';

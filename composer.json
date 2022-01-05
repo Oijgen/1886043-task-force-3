@@ -1,0 +1,15 @@
+{
+    "name": "38067/1886043-task-force-3",
+    "authors": [
+        {
+            "name": "Oijgen",
+            "email": "89553088+Oijgen@users.noreply.github.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+      "psr-4": {
+          "HtmlAcademy\\": "src/"
+      }
+  }
+}

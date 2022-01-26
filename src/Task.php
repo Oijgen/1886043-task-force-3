@@ -1,5 +1,11 @@
 <?php
 namespace HtmlAcademy;
+
+use HtmlAcademy\actions\AbstractAction;
+use HtmlAcademy\actions\CancelAction;
+use HtmlAcademy\actions\DoneAction;
+use HtmlAcademy\actions\RefuseAction;
+use HtmlAcademy\actions\RespondAction;
 class Task
 {
     public const STATUS_NEW = 'new';
@@ -7,37 +13,26 @@ class Task
     public const STATUS_BUSY = 'busy';
     public const STATUS_COMPLETE = 'completed';
     public const STATUS_FAILED = 'failed';
+
     public const ACTION_CANCEL = 'cancel';
     public const ACTION_RESPOND = 'respond';
     public const ACTION_DONE = 'done';
     public const ACTION_REFUSE = 'refuse';
-    public const ROLE_CLIENT = 'client';
-    public const ROLE_PERFORMER = 'performer';
 
-    public const NEXT_STATUS = [
+       public const NEXT_STATUS = [
         self::ACTION_CANCEL => self::STATUS_CANCEL,
         self::ACTION_RESPOND => self::STATUS_BUSY,
         self::ACTION_DONE => self::STATUS_COMPLETE,
         self::ACTION_REFUSE => self::STATUS_FAILED,
     ];
 
-    public const ALLOWED_ACTIONS = [
-        self::STATUS_NEW => [
-            self::ROLE_CLIENT => self::ACTION_CANCEL,
-            self::ROLE_PERFORMER => self::ACTION_RESPOND,
-        ],
-        self::STATUS_BUSY => [
-            self::ROLE_CLIENT => self::ACTION_DONE,
-            self::ROLE_PERFORMER => self::ACTION_REFUSE,
-        ],
-    ];
+    public $clientId;
+    public $performerId;
+    public $status;
 
-    public $clientID;
-    public $performerID;
-
-    public function __construct($clientID, $performerID) {
-        $this->clientID = $clientID;
-        $this->performerID = $performerID;
+    public function __construct($clientId, $performerId) {
+        $this->clientId = $clientId;
+        $this->performerId = $performerId;
     }
 
     public function getStatusMap() {
@@ -50,24 +45,24 @@ class Task
         ];
     }
 
-    public function getActionMap()
-    {
-        return [
-            self::ACTION_CANCEL => 'Отменить',
-            self::ACTION_DONE => 'Выполнено',
-            self::ACTION_RESPOND => 'Откликнуться',
-            self::ACTION_REFUSE => 'Отказаться',
-        ];
-    }
-
     public function getStatusByAction($action)
     {
         return self::NEXT_STATUS[$action] ?? '';
     }
 
-    public function getAllowedActions($status, $role)
+    public function getAction(User $user): ?AbstractAction
     {
-        return self::ALLOWED_ACTIONS[$status][$role] ?? '';
+        $actions = [
+            new CancelAction(),
+            new RespondAction(),
+            new DoneAction(),
+            new RefuseAction(),
+        ];
+        foreach ($actions as $action) {
+            if ($action->checkRights($this, $user)) {
+                return $action;
+            }
+        }
+        return null;
     }
-
 }

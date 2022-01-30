@@ -19,7 +19,7 @@ class Task
     public const ACTION_DONE = 'done';
     public const ACTION_REFUSE = 'refuse';
 
-       public const NEXT_STATUS = [
+        public const NEXT_STATUS = [
         self::ACTION_CANCEL => self::STATUS_CANCEL,
         self::ACTION_RESPOND => self::STATUS_BUSY,
         self::ACTION_DONE => self::STATUS_COMPLETE,
